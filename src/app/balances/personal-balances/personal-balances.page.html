@@ -1,0 +1,245 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title *ngIf="view">Balances Rechnung</ion-title>
+        <ion-title *ngIf="!view">Balances User</ion-title>
+        <ion-buttons slot="end">
+            <ion-button  slot="end" (click)="changeView()">
+                <ion-icon slot="icon-only" name="swap"></ion-icon>
+            </ion-button>
+            <ion-icon name="help-circle" (click)="alertHelp()"></ion-icon>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <div *ngIf="!view">
+        <ion-card *ngFor="let invoice of summarizedSubInvoicesUserMustPay">
+            <ion-item button>
+                <ion-avatar slot="start">
+                    <ion-img src="{{invoice.user.picture}}"></ion-img>
+                </ion-avatar>
+                {{invoice.user.name}}
+                <ion-icon name="cash" slot="end"></ion-icon>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon color="danger" name="done-all" slot="start"></ion-icon>
+                    <ion-label>{{invoice.bilanz.toFixed(2)}}€</ion-label>
+                    <ion-button slot="end" color="danger" (click)="payAll(invoice)">Bezahlen</ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <div *ngIf="!view">
+        <ion-card *ngFor="let invoice of summarizedSubInvoicesUserHasPaid">
+            <ion-item button>
+                <ion-avatar slot="start">
+                    <ion-img src="{{invoice.user.picture}}"></ion-img>
+                </ion-avatar>
+                {{invoice.user.name}}
+                <ion-icon name="cash" slot="end"></ion-icon>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon color="success" name="done-all" slot="start"></ion-icon>
+                    <ion-label>{{invoice.bilanz.toFixed(2)}}€</ion-label>
+                    <ion-button slot="end" color="success">Erinnern</ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+
+    <div *ngIf="view">
+        <ion-card *ngFor="let invoice of invoicesUserMustPay">
+            <ion-item button>
+                <ion-avatar slot="start">
+                    <ion-img src="{{invoice.subInvoice.userDerBezahltHat.picture}}"></ion-img>
+                </ion-avatar>
+                {{invoice.subInvoice.userDerBezahltHat.name}}
+                <p slot="end">{{invoice.title}}</p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon color="danger" name="done-all" slot="start"></ion-icon>
+                    <ion-label>{{invoice.subInvoice.betrag.toFixed(2)}}€</ion-label>
+                    <ion-button slot="end" color="danger" (click)="pay(invoice.subInvoice, invoice.subInvoice.userDerBezahltHat.id, invoice.title)">Bezahlen</ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <div *ngIf="view">
+        <ion-card *ngFor="let invoice of invoicesUserHasPaid">
+            <ion-item button>
+                <ion-avatar slot="start">
+                    <ion-img src="{{invoice.subInvoice.userDerBezahlenMuss.picture}}"></ion-img>
+                </ion-avatar>
+                {{invoice.subInvoice.userDerBezahlenMuss.name}}
+                <p slot="end">{{invoice.title}}</p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon color="success" name="done-all" slot="start"></ion-icon>
+                    <ion-label>{{invoice.subInvoice.betrag.toFixed(2)}}€</ion-label>
+                    <ion-button slot="end" color="success" (click)="remindOfSubInvoice(invoice.subInvoice, invoice.title)">
+                        Erinnern
+                    </ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+    </div>
+
+    <ion-list *ngIf="showLoading">
+        <ion-card >
+            <ion-item >
+                <ion-avatar slot="start">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                <p slot="end">
+                    <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                </p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon name="done-all" slot="start">
+                    </ion-icon>
+                    <ion-label>
+                        <ion-skeleton-text animated width="40px"></ion-skeleton-text>
+                    </ion-label>
+                    <ion-button color="lightgrey" slot="end">
+                      <ion-skeleton-text animated width="65px"></ion-skeleton-text>
+                    </ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+        <ion-card >
+            <ion-item >
+                <ion-avatar slot="start">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                <p slot="end">
+                    <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                </p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon name="done-all" slot="start">
+                    </ion-icon>
+                    <ion-label>
+                        <ion-skeleton-text animated width="40px"></ion-skeleton-text>
+                    </ion-label>
+                    <ion-button color="lightgrey" slot="end">
+                        <ion-skeleton-text animated width="65px"></ion-skeleton-text>
+                    </ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+        <ion-card >
+            <ion-item >
+                <ion-avatar slot="start">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                <p slot="end">
+                    <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                </p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon name="done-all" slot="start">
+                    </ion-icon>
+                    <ion-label>
+                        <ion-skeleton-text animated width="40px"></ion-skeleton-text>
+                    </ion-label>
+                    <ion-button color="lightgrey" slot="end">
+                        <ion-skeleton-text animated width="65px"></ion-skeleton-text>
+                    </ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+        <ion-card >
+            <ion-item >
+                <ion-avatar slot="start">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                <p slot="end">
+                    <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                </p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon name="done-all" slot="start">
+                    </ion-icon>
+                    <ion-label>
+                        <ion-skeleton-text animated width="40px"></ion-skeleton-text>
+                    </ion-label>
+                    <ion-button color="lightgrey" slot="end">
+                        <ion-skeleton-text animated width="65px"></ion-skeleton-text>
+                    </ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+        <ion-card >
+            <ion-item >
+                <ion-avatar slot="start">
+                    <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                <p slot="end">
+                    <ion-skeleton-text animated width="50px"></ion-skeleton-text>
+                </p>
+            </ion-item>
+            <ion-card-content>
+                <ion-item>
+                    <ion-icon name="done-all" slot="start">
+                    </ion-icon>
+                    <ion-label>
+                        <ion-skeleton-text animated width="40px"></ion-skeleton-text>
+                    </ion-label>
+                    <ion-button color="lightgrey" slot="end">
+                        <ion-skeleton-text animated width="65px"></ion-skeleton-text>
+                    </ion-button>
+                </ion-item>
+            </ion-card-content>
+        </ion-card>
+    </ion-list>
+
+    <p class="ion-padding-horizontal" text-center *ngIf="invoicesUserMustPay.length === 0 && invoicesUserHasPaid.length === 0 && !showLoading">Keine Rechnungen gespeichert</p>
+    <ion-button class="ion-padding-horizontal" text-center *ngIf="invoicesUserMustPay.length === 0 && invoicesUserHasPaid.length === 0 && !showLoading" expand="block" (click)="createInvoice()">Jetzt anlegen</ion-button>
+
+</ion-content>
+<ion-tab-bar slot="bottom">
+
+    <ion-tab-button (click)="statsPage()" tab="stats">
+        <ion-icon name="stats"></ion-icon>
+        <ion-label>Stats</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="openInvoiceList()">
+        <ion-icon name="list-box"></ion-icon>
+        <ion-label>List</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button color="primary" (click)="groupHome()">
+        <ion-icon size="large" color="dark" name="home"></ion-icon>
+        <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="openGroupDetail()">
+        <ion-icon name="people"></ion-icon>
+        <ion-label>Group</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button disabled="true">
+        <ion-icon name="logo-euro"></ion-icon>
+        <ion-label>Balances</ion-label>
+    </ion-tab-button>
+
+</ion-tab-bar>

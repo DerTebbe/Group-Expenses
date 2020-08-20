@@ -1,0 +1,220 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Gruppe</ion-title>
+      <ion-buttons slot="end">
+          <ion-button slot="end" (click)="addMember()">
+              <ion-icon slot="icon-only" name="person-add"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="!editMode" slot="end" (click)="toggleEdit()">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-button>
+          <ion-button *ngIf="editMode" slot="end" (click)="toggleEdit()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+      </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card>
+        <img *ngIf="!showloading" [src]="group.bildLink" alt="Gruppenbild">
+        <ion-buttons>
+
+            <ion-button *ngIf="editMode" class="center" (click)="presentActionSheet()">
+                <ion-icon name="camera"></ion-icon> Foto auswählen / erstellen
+            </ion-button>
+
+        </ion-buttons>
+        <ion-card-header *ngIf="!editMode && !showloading">
+            <ion-card-title>{{group.name}}</ion-card-title>
+            <ion-card-subtitle>Erstellt am: {{group.date | date: 'dd.MM.yyyy'}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-header *ngIf="showloading">
+            <ion-card-title>
+                <ion-skeleton-text animated width="100px"></ion-skeleton-text>
+            </ion-card-title>
+            <ion-card-subtitle>
+                <ion-skeleton-text animated width="100px"></ion-skeleton-text>
+            </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item *ngIf="editMode">
+                <ion-label slot="start">Name: </ion-label>
+
+                    <ion-input
+                            [(ngModel)]="group.name"
+                            slot="end"
+                            required
+                            maxlength="30"
+                            type="text">
+                    </ion-input>
+
+            </ion-item>
+
+        </ion-card-content>
+    </ion-card>
+    <!--<ion-card>
+        <ion-card-content>
+            <ion-grid>
+            <ion-row>
+                <ion-col size="4">
+
+                    <img [src]="group.bildLink">
+
+                </ion-col>
+                <ion-col size="8">
+                    <ion-item *ngIf="!editMode" lines="none">
+                        <h1>{{group.name}}</h1>
+                    </ion-item>
+                    <ion-item *ngIf="editMode" lines = "none">
+                        <h1>
+                            <ion-input
+                                    [(ngModel)]="group.name"
+                                    required
+                                    maxlength="30"
+                                    type="text">
+                            </ion-input>
+                        </h1>
+                    </ion-item>
+
+                    <ion-item lines="none">
+                        <ion-text>Erstellt am: {{group.date | date: 'dd.MM.yyyy'}}</ion-text>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>-->
+
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Kategorie</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item *ngIf="!showloading" lines="none">
+                <ion-select #C interface="popover" *ngIf="editMode" [(ngModel)]="group.typ" (ngModelChange)="addType(C.valueOf())">
+                    <ion-select-option *ngFor="let typ of types"
+                                       [value]="typ">{{typ}}
+                    </ion-select-option>
+                    <ion-select-option value="own">Kategorie hinzufügen</ion-select-option>
+                </ion-select>
+                <ion-text *ngIf="!editMode">{{group.typ}}
+                    <ion-icon class="cat" *ngIf="group.typ == 'Urlaub'" name="airplane"></ion-icon>
+                    <ion-icon class="cat" *ngIf="group.typ == 'WG'" name="home"></ion-icon>
+                    <ion-icon class="cat" *ngIf="group.typ == 'Festival'" name="musical-notes"></ion-icon>
+                </ion-text>
+            </ion-item>
+            <ion-item *ngIf="showloading" lines="none">
+                <ion-skeleton-text animated width="60px" ></ion-skeleton-text>
+            </ion-item>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Mitglieder</ion-card-title>
+        </ion-card-header>
+        <ion-card-content *ngIf="!showloading">
+            <ion-list  *ngFor="let member of members">
+                <ion-item-sliding>
+                    <ion-item>
+                        <ion-avatar slot="start">
+                            <ion-img src="{{member.picture}}"></ion-img>
+                        </ion-avatar>
+                        <ion-label>{{member.name}}</ion-label>
+                    </ion-item>
+                    <ion-item-options>
+                        <ion-button color="danger" (click)="remove(member)">Entfernen</ion-button>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-list>
+            <ion-button *ngIf="editMode" color="tertiary" class="ion-padding-horizontal" expand="block" (click)="addMember()">
+                Mitglied hinzufügen
+            </ion-button>
+        </ion-card-content>
+
+            <ion-card-content *ngIf="showloading">
+            <ion-list >
+                <ion-item>
+                    <ion-avatar slot="start">
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-avatar>
+                    <ion-label>
+                        <ion-skeleton-text width="100px" animated></ion-skeleton-text>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-avatar slot="start">
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-avatar>
+                    <ion-label>
+                        <ion-skeleton-text width="100px" animated></ion-skeleton-text>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-avatar slot="start">
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-avatar>
+                    <ion-label>
+                        <ion-skeleton-text width="100px" animated></ion-skeleton-text>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-avatar slot="start">
+                        <ion-skeleton-text animated></ion-skeleton-text>
+                    </ion-avatar>
+                    <ion-label>
+                        <ion-skeleton-text width="100px" animated></ion-skeleton-text>
+                    </ion-label>
+                </ion-item>
+            </ion-list>
+
+        </ion-card-content>
+    </ion-card>
+
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <ion-button color="tertiary" *ngIf="editMode" class="ion-padding-horizontal" expand="block" (click)="save()">
+        Speichern
+    </ion-button>
+
+    <p></p>
+    <p></p>
+
+    <ion-button *ngIf="editMode" class="ion-padding-horizontal" expand="block" (click)="deleteWindow()" color="danger">
+        Gruppe löschen
+    </ion-button>
+
+</ion-content>
+
+<ion-tab-bar slot="bottom">
+
+    <ion-tab-button tab="stats" (click)="statsPage()">
+        <ion-icon name="stats"></ion-icon>
+        <ion-label>Stats</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="invoiceList()">
+        <ion-icon name="list-box"></ion-icon>
+        <ion-label>List</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button color="primary" (click)="groupHome()">
+        <ion-icon size="large" color="dark" name="home"></ion-icon>
+        <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button disabled="true">
+        <ion-icon name="people"></ion-icon>
+        <ion-label>Group</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="balances()">
+        <ion-icon name="logo-euro"></ion-icon>
+        <ion-label>Balances</ion-label>
+    </ion-tab-button>
+
+</ion-tab-bar>

@@ -1,0 +1,48 @@
+<ion-header>
+
+</ion-header>
+
+<ion-content padding class="cbg">
+  <div text-center>
+    <img src='../../../assets/img/Bild2.png' alt="logo" class="logo">
+  </div>
+
+  <form class="form" [formGroup]="VALIDATIONS_FORM"  (ngSubmit)="loginUser(VALIDATIONS_FORM.value)">
+
+    <ion-item lines="none" class="go" >
+      <!--<ion-label  position="floating" color="primary">Email</ion-label> -->
+
+      <ion-input clearInput="true" type="email" formControlName="email" class="form-control" required placeholder="Email"></ion-input>
+    </ion-item>
+    <div class="validation-errors">
+      <ng-container *ngFor="let validation of VALIDATION_MESSAGES.email">
+        <div class="error-message" *ngIf="VALIDATIONS_FORM.get('email').hasError(validation.type) && (VALIDATIONS_FORM.get('email').dirty || VALIDATIONS_FORM.get('email').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+    </div>
+
+    <ion-item lines="none" class="go2" >
+     <!-- <ion-label  position="floating" color="primary">Password</ion-label> -->
+
+      <ion-input type="password" formControlName="password" class="form-control" required placeholder="Passwort"></ion-input>
+    </ion-item >
+    <div class="validation-errors">
+      <ng-container *ngFor="let validation of VALIDATION_MESSAGES.password" >
+        <div class="error-message" *ngIf="VALIDATIONS_FORM.get('password').hasError(validation.type) && (VALIDATIONS_FORM.get('password').dirty || VALIDATIONS_FORM.get('password').touched)" >
+          {{ validation.message }}
+        </div>
+      </ng-container>
+    </div>
+    <ion-button expand="block"  class="submit-btn" type="submit" style="margin-top: 5%"  [disabled]="!VALIDATIONS_FORM.valid">Einloggen</ion-button>
+
+    <label class="error-message">{{errorMessage}}</label>
+    <label class="success-message">{{successMessage}}</label>
+  </form>
+  <p class="go-to-register">
+    Noch nicht registriert? <a (click)="goToRegisterPage()">Erstelle ein Konto.</a>
+  </p>
+  <hr class="hr-text" data-content="ODER" style="margin-top: 15%">
+  <ion-button  expand="block" color="danger" style="margin-top: 8%" (click)="doGoogleLogin()"><ion-icon name="logo-google" ></ion-icon>
+    Anmeldung mit Google</ion-button>
+</ion-content>

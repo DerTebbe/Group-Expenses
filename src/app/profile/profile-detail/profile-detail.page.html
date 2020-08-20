@@ -1,0 +1,110 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Profil</ion-title>
+        <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <!-- <ion-button *ngIf="!isEditMode" (click)="toggleEditMode();" slot="end">
+             <ion-icon  name="create" ></ion-icon>
+         </ion-button>
+      !--<ion-buttons  slot="start">
+         <ion-button (click)="isChangePW = false" *ngIf="!isEditMode">
+         </ion-button>
+         <ion-button slot="end" *ngIf="isEditMode" (click)="toggleEditMode();">
+             <ion-icon  name="close"></ion-icon>
+         </ion-button>
+         </ion-buttons>-->
+        <ion-buttons slot="end">
+        <ion-button *ngIf="!isEditMode" (click)="toggleEditMode()" >
+            <ion-icon slot="icon-only"  name="create" ></ion-icon>
+        </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+        <ion-button  *ngIf="isEditMode" (click)="toggleEditMode(); isChangePW = false; errorMessage=''">
+            <ion-icon slot="icon-only"  name="close"></ion-icon>
+        </ion-button>
+        </ion-buttons>
+        </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <ion-label style="font-size: 12pt">Du Hast {{credits}} Expensive Points</ion-label>
+    <ion-progress-bar value="{{lvlp}}" style="color: #07B675; height: 2%"></ion-progress-bar>
+    <ion-label style="font-size: 12pt">Du bist Level {{lvl}} und  {{lvlname}} </ion-label>
+<br>
+<div class="star">
+   <ion-icon style="color: white;" class="star1" name="md-star"></ion-icon><ion-icon class="star2" style="color: white;" name="md-star"></ion-icon>
+       <ion-icon style="color: white;" class="star3" name="md-star"></ion-icon><ion-icon style="color: white;" class="star4" name="md-star"></ion-icon>
+   </div>
+        <ion-card class="photo">
+        <img *ngIf="userData.picture === null" alt="bier" [src]="user.photoURL"/>
+        <img *ngIf="userData.picture !== null" alt="bier" [src]="userData.picture">
+
+    </ion-card>
+        <ion-buttons>
+
+            <ion-button *ngIf="isEditMode" class="center" (click)="presentActionSheet()">
+                <ion-icon name="camera"></ion-icon> Foto auswählen / erstellen
+            </ion-button>
+
+        </ion-buttons>
+<div id="list">
+    <form class="form" [formGroup]="VALIDATIONS_FORM" (ngSubmit)="toggleSave(VALIDATIONS_FORM.value)">
+        <ion-item *ngIf="!isChangePW" lines="none">
+            <ion-icon slot="start" name="person"></ion-icon>
+            <ion-input type="text" formControlName="username" class="form-control" required placeholder="Username" [(ngModel)]="userData.name"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+            <ng-container *ngFor="let validation of VALIDATION_MESSAGES.username">
+                <div class="error-message"
+                     *ngIf="VALIDATIONS_FORM.get('username').hasError(validation.type) && (VALIDATIONS_FORM.get('username').dirty || VALIDATIONS_FORM.get('username').touched)">
+                    {{ validation.message }}
+                </div>
+            </ng-container>
+        </div>
+        <ion-item *ngIf="!isChangePW" lines="none">
+            <ion-icon slot="start" name="mail"></ion-icon>
+            <ion-input type="text" formControlName="email" class="form-control" required placeholder="Email" [(ngModel)]="user.email"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+            <ng-container *ngFor="let validation of VALIDATION_MESSAGES.email">
+                <div class="error-message"
+                     *ngIf="VALIDATIONS_FORM.get('email').hasError(validation.type) && (VALIDATIONS_FORM.get('email').dirty || VALIDATIONS_FORM.get('email').touched)">
+                    {{ validation.message }}
+                </div>
+            </ng-container>
+        </div>
+        <p *ngIf="!isChangePW && isEditMode"><a (click)="isChangePW = true; editPW()">Passwort ändern!</a></p>
+        <ion-item lines="none" *ngIf="isChangePW">
+            <ion-icon slot="start" name="key"></ion-icon>
+            <ion-input type="password" formControlName="oldPW" class="form-control" required placeholder="Altes Passwort" ></ion-input>
+        </ion-item>
+        <ion-item lines="none" *ngIf="isChangePW">
+            <ion-icon slot="start" name="key"></ion-icon>
+            <ion-input type="password" formControlName="password" class="form-control" required placeholder=" Neues Passwort"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+            <ng-container *ngFor="let validation of VALIDATION_MESSAGES.password">
+                <div class="error-message"
+                     *ngIf="VALIDATIONS_FORM.get('password').hasError(validation.type) && (VALIDATIONS_FORM.get('password').dirty || VALIDATIONS_FORM.get('password').touched)">
+                    {{ validation.message }}
+                </div>
+            </ng-container>
+        </div>
+        <ion-item lines="none" *ngIf="isChangePW">
+            <ion-icon slot="start" name="key"></ion-icon>
+            <ion-input type="password" formControlName="confirmPW" class="form-control" required placeholder="Neues Passwort bestätigen" ></ion-input>
+        </ion-item>
+        <p id="pw-confirm-err"></p>
+
+        <ion-button color="tertiary" *ngIf="isEditMode" expand="block" class="submit-btn" type="submit" [disabled]="!VALIDATIONS_FORM.valid" style="margin-top: 10%"><ion-icon name="save"></ion-icon>Speichern</ion-button>
+        <label *ngIf="isEditMode" class="error-message">{{errorMessage}}</label>
+        <label *ngIf="!isEditMode" class="success-message">{{successMessage}}</label>
+
+    </form>
+</div>
+    <ion-button *ngIf="!isEditMode" expand="block" color="danger" style="margin-top: 8%" (click)="signOut()">Ausloggen</ion-button>
+    <ion-button *ngIf="isEditMode" expand="block" color="danger"  (click)="toggleDelete()">
+        <ion-icon name="trash"></ion-icon>Profil löschen
+    </ion-button>
+</ion-content>

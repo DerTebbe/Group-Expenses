@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Registrieren</ion-title>
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+    <form class="form" [formGroup]="VALIDATIONS_FORM" (ngSubmit)="tryRegister(VALIDATIONS_FORM.value)">
+
+        <ion-item lines="none">
+            <ion-input type="text" formControlName="email" class="form-control" required placeholder="Email"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+            <ng-container *ngFor="let validation of VALIDATION_MESSAGES.email">
+                <div class="error-message"
+                     *ngIf="VALIDATIONS_FORM.get('email').hasError(validation.type) && (VALIDATIONS_FORM.get('email').dirty || VALIDATIONS_FORM.get('email').touched)">
+                    {{ validation.message }}
+                </div>
+            </ng-container>
+        </div>
+
+        <ion-item lines="none">
+            <ion-input type="password" formControlName="password" class="form-control" required placeholder="Passwort"></ion-input>
+        </ion-item>
+        <div class="validation-errors">
+            <ng-container *ngFor="let validation of VALIDATION_MESSAGES.password">
+                <div class="error-message"
+                     *ngIf="VALIDATIONS_FORM.get('password').hasError(validation.type) && (VALIDATIONS_FORM.get('password').dirty || VALIDATIONS_FORM.get('password').touched)">
+                    {{ validation.message }}
+                </div>
+            </ng-container>
+        </div>
+        <ion-item lines="none">
+            <ion-input type="password" formControlName="confirmPW" class="form-control" required placeholder="Passwort bestätigen" ></ion-input>
+        </ion-item>
+        <p id="pw-confirm-err"></p>
+
+        <ion-button expand="block" class="submit-btn" type="submit" [disabled]="!VALIDATIONS_FORM.valid" style="margin-top: 10%">Registrieren</ion-button>
+        <label class="error-message">{{errorMessage}}</label>
+        <label class="success-message">{{successMessage}}</label>
+    </form>
+    <p class="go-to-login">Hast Du schon ein Konto? <a (click)="goLoginPage()">Melde dich an.</a></p>
+
+    <hr class="hr-text" data-content="ODER" style="margin-top: 15%">
+    <ion-button (click)="doGoogleLogin()" expand="block" color="danger" style="margin-top: 8%" ><ion-icon name="logo-google" ></ion-icon> ANMELDUNG MIT GOOGLE</ion-button>
+</ion-content>

@@ -1,0 +1,197 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{pageTitle}}</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="isEditMode" (click)="delete()">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+      <ion-button (click)="openInvoicePicker()" *ngIf="!isEditMode">
+        <ion-icon slot="icon-only" name="book">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div text-center>
+
+    <img *ngIf="!showLoading" [src]="invoice.bildLink" alt="Rechnungsbild">
+
+    <img alt="a" *ngIf="showLoading" src="../../../assets/img/receipt.jpg">
+
+    <ion-buttons>
+
+      <ion-button class="center" (click)="presentActionSheet()">
+        <ion-icon name="camera"></ion-icon> Foto auswählen / erstellen
+      </ion-button>
+
+    </ion-buttons>
+  </div>
+
+  <ion-list *ngIf="!showLoading">
+    <ion-item>
+      <ion-label>Titel</ion-label>
+      <ion-input type="text"
+                 text-right
+                 maxlength="20"
+                 [(ngModel)]="invoice.titel"
+                 required>
+      </ion-input>
+    </ion-item>
+    <p class="error ion-text-end ion-padding-end"
+       *ngIf="errors.get('titel')">
+      {{errors.get('titel')}}
+    </p>
+
+    <ion-item>
+      <ion-label>Betrag</ion-label>
+      <ion-input [disabled]="isEditMode"
+                 type="number"
+                 step="0.01"
+                 text-right
+                 maxlength="15"
+                 [(ngModel)]="invoice.betrag"
+                 required>
+      </ion-input>
+    </ion-item>
+    <p class=" error ion-text-end ion-padding-end"
+       *ngIf="errors.get('betrag')">
+      {{errors.get('betrag')}}
+    </p>
+
+    <ion-item *ngIf="isEditMode">
+      <ion-label>Zahler</ion-label>
+      <ion-input
+              [disabled]="isEditMode"
+              type="text"
+              text-right
+              maxlength="30"
+              [value]="invoice.zahler.name"
+              required>
+      </ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="isEditMode">
+      <ion-label>Erstellt am</ion-label>
+      <ion-text text-wrap color="dark">{{invoice.datum | date: 'dd.MM.yyyy'}}</ion-text>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Beschreibung</ion-label>
+      <ion-textarea type="text"
+                 text-right
+                 [(ngModel)]="invoice.beschreibung"
+                 maxlength="255">
+      </ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Typ</ion-label>
+      <ion-select
+              [(ngModel)]="einkommenAbfrage"
+              placeholder="Auswählen..."
+              [disabled]="isEditMode"
+              okText="Auswählen"
+              cancelText="Abbrechen">
+        <ion-select-option value="Einkommen">Einkommen</ion-select-option>
+        <ion-select-option value="Ausgabe">Ausgabe</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Kategorie</ion-label>
+      <ion-select #C interface="popover" [(ngModel)]="invoice.kategorie" (ngModelChange)="presentPrompt(C.valueOf())">
+        <ion-select-option *ngFor="let kat of kategorien"
+                           [value]="kat">{{kat}}
+        </ion-select-option>
+        <ion-select-option *ngFor="let kat of group.kategorien"
+                           [value]="kat.Kategorie">{{kat["Kategorie"]}}</ion-select-option>
+        <ion-select-option value="own">Kategorie hinzufügen</ion-select-option>
+      </ion-select>
+    </ion-item>
+      <p class="error ion-text-end ion-padding-end"
+         *ngIf="errors.get('kategorie')">
+          {{errors.get('kategorie')}}
+      </p>
+
+    <ion-item *ngIf="!isEditMode">
+      <ion-label>Merken  <ion-icon name="help-circle" (click)="alertHelp()"></ion-icon></ion-label>
+      <ion-toggle [(ngModel)]="saveInvoice" color="primary"></ion-toggle>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-list *ngIf="showLoading">
+    <ion-item>
+      <ion-label>Titel</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+    <p class="error ion-text-end ion-padding-end"
+       *ngIf="errors.get('titel')">
+      {{errors.get('titel')}}
+    </p>
+
+    <ion-item>
+      <ion-label>Betrag</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+    <p class=" error ion-text-end ion-padding-end"
+       *ngIf="errors.get('betrag')">
+      {{errors.get('betrag')}}
+    </p>
+
+    <ion-item *ngIf="isEditMode">
+      <ion-label>Zahler</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="isEditMode">
+      <ion-label>Erstellt am</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Beschreibung</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Einnahme?</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Kategorie</ion-label>
+      <ion-label>
+        <ion-skeleton-text animated ></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item *ngIf="!isEditMode">
+      <ion-label>Merken  <ion-icon name="help-circle" (click)="alertHelp()"></ion-icon></ion-label>
+      <ion-toggle [(ngModel)]="saveInvoice" color="primary"></ion-toggle>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-button color="tertiary" class="ion-padding-horizontal" expand="block" (click)="save()">
+    Speichern
+  </ion-button>
+</ion-content>

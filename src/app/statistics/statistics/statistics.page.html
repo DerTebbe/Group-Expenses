@@ -1,0 +1,110 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Statistiken</ion-title>
+
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!showloading" padding>
+    <ion-item>
+        <ion-avatar slot="start" style="height: 30%">
+            <ion-img style="height: 165%; width: 165%" src="{{image}}"></ion-img>
+        </ion-avatar>
+        <ion-label style="text-align: center">
+            <h1> {{group.name}}</h1>
+            <h4>{{group.date| date: 'dd.MM.yyyy'}}</h4>
+        </ion-label>
+    </ion-item>
+    <ion-grid>
+        <ion-row>
+            <ion-col class="col align">
+                Mitglieder: <br> {{memberSize}}
+            </ion-col>
+            <ion-col class="col align">
+                Total: <br> {{totalPaid ? totalPaid.toFixed(2) : 0}}€
+            </ion-col>
+            <ion-col class="align">
+                Durchschnitt: <br> {{(totalPaid.toFixed(2) ? totalPaid.toFixed(2) / memberSize : 0).toFixed(2)}}€
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-item-divider *ngIf="categories.length > 0"></ion-item-divider>
+    <h6 *ngIf="categories.length > 0"><strong>Angezeigte Kategorien:</strong> </h6>
+            <ion-select *ngIf="categories.length > 0"  multiple="true" (ionChange)="selectCat($event)" cancelText="Abbrechen" okText="Auswählen">
+                <ion-select-option *ngFor="let cat of categories" selected="{{cat.checked}}">
+                    {{cat.kategorie}}
+                </ion-select-option>
+            </ion-select>
+    <ion-item-divider *ngIf="categories.length > 0"></ion-item-divider>
+
+    <ion-item>
+        <ion-text *ngIf="!hasOutStats">Keine Ausgaben vorhanden.</ion-text>
+        <google-chart *ngIf="hasOutStats" [data]="pieChartDataOut"></google-chart>
+    </ion-item>
+
+
+    <ion-item>
+        <ion-text *ngIf="!hasInStats">Keine Einnahmen vorhanden.</ion-text>
+        <google-chart *ngIf="hasInStats" [data]="pieChartDataIn"></google-chart>
+    </ion-item>
+    <ion-item *ngIf="hasOutInStats">
+        <google-chart [data]="pieChartDataOutIn"></google-chart>
+    </ion-item>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button >
+            <ion-icon name="share"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="shareFacebook()">
+                <ion-icon name="logo-facebook"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="shareWhatsapp()">
+                <ion-icon name="logo-whatsapp"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="shareTwitter()">
+                <ion-icon name="logo-twitter"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="shareInsta()">
+                <ion-icon name="logo-instagram"></ion-icon>
+            </ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+
+</ion-content>
+
+<ion-content *ngIf="showloading">
+    <img justify-content-center src='../../../assets/img/gif.gif' alt="logo" class="logo">
+</ion-content>
+
+<ion-tab-bar class="tab-bar" slot="bottom">
+
+    <ion-tab-button (click)="statsPage()" tab="stats" disabled="true">
+        <ion-icon name="stats"></ion-icon>
+        <ion-label>Stats</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="invoiceList()">
+        <ion-icon name="list-box"></ion-icon>
+        <ion-label>List</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button color="primary" (click)="groupHome()">
+        <ion-icon size="large" color="dark" name="home"></ion-icon>
+        <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="groupList()">
+        <ion-icon name="people"></ion-icon>
+        <ion-label>Group</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="balances()">
+        <ion-icon name="logo-euro"></ion-icon>
+        <ion-label>Balances</ion-label>
+    </ion-tab-button>
+
+</ion-tab-bar>

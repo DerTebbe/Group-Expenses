@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mitglieder-Übersicht</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item color="light">
+      <ion-label>
+        <span slot="start">Total: <span style="font-weight: bold">{{gesamt.toFixed(2)}}€</span></span>
+        <span slot="end" style="float: right">Durchschnitt per User: <span style="font-weight: bold">{{averageSum.toFixed(2)}}€</span></span>
+      </ion-label>
+    </ion-item>
+
+    <ion-item *ngFor="let user of groupBalances">
+      <ion-avatar slot="start">
+        <ion-img src="{{user.user.picture}}}"></ion-img>
+      </ion-avatar>
+      <ion-label>
+        {{user.user.name}}
+        <p>{{user.bilanz.toFixed(2)}}€</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-button class="ion-padding-horizontal" expand="block" (click)="openPersonalBalances()">Persönliche Beträge</ion-button>
+</ion-content>
+<ion-tab-bar slot="bottom">
+
+  <ion-tab-button (click)="statsPage()" tab="stats">
+    <ion-icon name="stats"></ion-icon>
+    <ion-label>Stats</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button (click)="openInvoiceList()">
+    <ion-icon name="list-box"></ion-icon>
+    <ion-label>List</ion-label>
+  </ion-tab-button>
+
+    <ion-tab-button color="primary" (click)="groupHome()">
+        <ion-icon size="large" color="dark" name="home"></ion-icon>
+        <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+  <ion-tab-button (click)="openGroupDetail()">
+    <ion-icon name="people"></ion-icon>
+    <ion-label>Group</ion-label>
+  </ion-tab-button>
+
+  <ion-tab-button disabled="true">
+    <ion-icon name="logo-euro"></ion-icon>
+    <ion-label>Balances</ion-label>
+  </ion-tab-button>
+
+</ion-tab-bar>

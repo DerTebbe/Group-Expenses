@@ -1,0 +1,241 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title *ngIf="!isSearch">Einnahmen/Ausgaben</ion-title>
+
+    <ion-searchbar *ngIf="isSearch"
+                   [showCancelButton]="true"
+                   (ionInput)="doSearch()"
+                   (ionClear)="clearSearchbar()"
+                   (ionCancel)="exitSearch()">
+    </ion-searchbar>
+
+    <ion-buttons *ngIf="!isSearch" slot="end">
+      <ion-button (click)="search()">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+        <ion-button (click)="doFilter()">
+            <ion-icon slot="icon-only" name="funnel"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-item *ngIf="invoices.length !== 0">
+        <h6><strong slot="start">Angezeigte Kategorien: </strong></h6>
+        <ion-select slot="end" *ngIf="categories.length > 0"
+                    multiple="true"
+                    (ionChange)="selectCat($event)"
+                    placeholder="Auswählen"
+                    cancelText="Abbrechen"
+                    okText="Auswählen"
+                    >
+        <ion-select-option  *ngFor="let cat of categories" selected="{{cat.checked}}">
+            {{cat.kategorie}}
+        </ion-select-option>
+        </ion-select>
+    </ion-item>
+
+
+  <!-- Liste aller Rechnungen und gefilterte Rechnungen -->
+    <div >
+        <ion-card *ngFor="let invoice of filteredInvoice" >
+            <ion-item button (click)="editInvoice(invoice.id)">
+                <ion-card-header>
+                    <span style="color:#25c2a1"><b>{{invoice.titel}}  </b></span>
+                    <ion-icon *ngIf="invoice.subInvoices.length === 0" style="zoom:1.2; color: green" name="checkbox"></ion-icon>
+                    <ion-icon *ngIf="invoice.subInvoices.length > 0" color="danger" style="zoom:1.2; color: red" name="alert"></ion-icon>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 *ngIf="invoice.isIncome">Betrag: <b style="color: green">{{invoice.betrag.toFixed(2)}}€ </b></h5>
+                    <h5 *ngIf="!invoice.isIncome">Betrag: <b style="color: red">{{invoice.betrag.toFixed(2)}}€ </b></h5>
+                    <h5>Zahler: <b>{{invoice.zahler.name}}</b></h5>
+                    <h5>Datum: <b>{{invoice.datum | date: 'dd.MM.yyyy'}}</b></h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+    </div>
+
+    <ion-list *ngIf="showLoading">
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                        <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                    <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                    <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                    <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                    <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                    <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+        <ion-card>
+            <ion-item>
+                <ion-card-header>
+                    <ion-skeleton-text width="100px"></ion-skeleton-text>
+                </ion-card-header>
+                <ion-card-content margin-top="1px" slot="end">
+                    <h5 >
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                    <h5>
+                        <ion-skeleton-text animated style="width: 50px"></ion-skeleton-text>
+                    </h5>
+                </ion-card-content>
+            </ion-item>
+        </ion-card>
+    </ion-list>
+
+  <!--Liste der gefilterten Gruppen-->
+  <ion-fab *ngIf="invoices.length != 0" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="createInvoice()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+    <p class="ion-padding-horizontal" *ngIf="invoices.length === 0 && !showLoading" text-center>Keine Rechnungen gespeichert</p>
+    <ion-button class="ion-padding-horizontal" text-center *ngIf="invoices.length === 0 && !showLoading" expand="block" (click)="createInvoice()">Jetzt anlegen</ion-button>
+
+    <ion-select okText="Auswählen" cancelText="Abbrechen" style="visibility: hidden" #filterSelect [(ngModel)]="sortierart" (ionChange)="filterInvoices()">
+        <ion-select-option [value]="5">Datum (absteigend)</ion-select-option>
+        <ion-select-option [value]="2">Datum (aufsteigend)</ion-select-option>
+        <ion-select-option [value]="4">Betrag (absteigend)</ion-select-option>
+        <ion-select-option [value]="1">Betrag (aufsteigend)</ion-select-option>
+        <ion-select-option [value]="0">Titel (A-Z)</ion-select-option>
+        <ion-select-option [value]="3">Titel (Z-A)</ion-select-option>
+    </ion-select>
+</ion-content>
+
+
+
+        <ion-tab-bar class="tab-bar" slot="bottom">
+
+            <ion-tab-button (click)="statsPage()" tab="stats">
+                <ion-icon name="stats"></ion-icon>
+                <ion-label>Stats</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button (click)="invoiceList()" disabled="true">
+                <ion-icon name="list-box"></ion-icon>
+                <ion-label>List</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button color="primary" (click)="groupHome()">
+                <ion-icon size="large" color="dark" name="home"></ion-icon>
+                <ion-label>Home</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button (click)="groupList()">
+                <ion-icon name="people"></ion-icon>
+                <ion-label>Group</ion-label>
+            </ion-tab-button>
+
+            <ion-tab-button (click)="balances()">
+                <ion-icon name="logo-euro"></ion-icon>
+                <ion-label>Balances</ion-label>
+            </ion-tab-button>
+
+        </ion-tab-bar>
+
+
+

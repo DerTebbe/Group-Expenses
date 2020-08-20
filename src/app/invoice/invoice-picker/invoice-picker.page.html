@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-searchbar (ionInput)="doSearch($event)"
+                 (ionClear)="clearSearchbar()"
+                 [showCancelButton]="true"
+                 (ionCancel)="modalController.dismiss()">
+  </ion-searchbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item button
+              *ngFor="let invoice of filteredInvoices"
+              (click)="modalController.dismiss(invoice)">
+      {{invoice.titel}}
+    </ion-item>
+    <p class="ion-padding-horizontal" *ngIf="invoices.length === 0">Keine Rechnungen gespeichert</p>
+    <ion-button class="ion-padding-horizontal" *ngIf="invoices.length === 0" expand="block" (click)="createInvoice()">Jetzt anlegen</ion-button>
+  </ion-list>
+</ion-content>
+

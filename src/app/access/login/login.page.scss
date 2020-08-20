@@ -1,0 +1,102 @@
+.logo {
+  width: 45%;
+  margin-top: 13%;
+  margin-bottom: 8%;
+
+}
+.cont{
+  z-index: auto;
+
+;
+}
+
+.form-control {
+  border: 1px solid #828179;
+  margin: 2% 0;
+  box-shadow: 0px 1px 2px rgba(44, 62, 80, 0.10);
+  margin-bottom: 3%;
+  border-radius: 0.5em/0.5em;
+
+
+}
+
+.go {
+  margin-top: 7%;
+  border-radius: 1em/1em;
+
+
+
+}
+.go2{
+  margin-top: 2%;
+  border-radius: 1em/1em;
+}
+
+
+
+.go-to-register {
+  padding-left: 11% ;
+  font-size: medium;
+  color: #606060;
+  margin-top: 7%;
+
+}
+
+
+.error-message {
+  font-size: small;
+  color: #d72d1f;
+
+}
+
+ion-button ion-icon {
+  position: absolute;
+  left: 20px;
+
+}
+
+.hr-text {
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: #606060;
+  text-align: center;
+  height: 1.5em;
+
+
+
+  &:before {
+    content: '';
+    // use the linear-gradient for the fading effect
+    // use a solid background color for a solid bar
+    background: linear-gradient(to right, transparent, #ffffff, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+  }
+
+  &:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    // this is really the only tricky part, you need to specify the background color of the container element...
+    background-color: #ffffff;
+    border-radius:3em/3em;
+
+  }
+  ion-button{
+    box-shadow: 0px 1px 2px rgba(44, 62, 80, 0.10);
+  }
+
+
+}
+
+
+

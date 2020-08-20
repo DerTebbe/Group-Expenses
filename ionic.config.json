@@ -1,0 +1,7 @@
+{
+  "name": "ema-projekt",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

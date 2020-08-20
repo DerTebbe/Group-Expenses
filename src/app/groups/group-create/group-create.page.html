@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Gruppe erstellen</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>
+    <ion-label position="stacked"></ion-label>
+    <ion-input placeholder="Gruppenname:"
+    type="text"
+    text-left
+    [(ngModel)]="group.name"
+    [value]="group.name"
+    required>
+    </ion-input>
+  </ion-item>
+
+ <ion-item>
+    <ion-label>Kategorie</ion-label>
+   <ion-select #C interface="popover" [(ngModel)]="group.typ" (ngModelChange)="addType(C.valueOf())">
+     <ion-select-option *ngFor="let typ of types"
+                        [value]="typ">{{typ}}
+     </ion-select-option>
+     <ion-select-option value="own">Kategorie hinzufügen</ion-select-option>
+   </ion-select>
+  </ion-item>
+
+
+<br>
+  <ion-button class="ion-padding-horizontal" expand="block" (click)="addMember()">
+    Mitglied hinzufügen
+  </ion-button>
+  <p class="ion-text-center">oder</p>
+  <ion-button color="tertiary" class="ion-padding-horizontal" expand="block" (click)="save()">
+    Speichern
+  </ion-button>
+</ion-content>
